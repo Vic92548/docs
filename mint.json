@@ -1,9 +1,9 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "VGS Toolkit",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/logo/vgv_toolkit_logo_dark.svg",
+    "light": "/logo/vgv_toolkit_logo_light.svg"
   },
   "favicon": "/favicon.svg",
   "colors": {
@@ -27,25 +27,25 @@
   },
   "tabs": [
     {
-      "name": "API Reference",
-      "url": "api-reference"
+      "name": "Poly Plaza",
+      "url": "poly-plaza"
     }
   ],
   "anchors": [
     {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
+      "name": "Steam",
+      "icon": "steam",
+      "url": "https://store.steampowered.com/developer/VictorGameStudio"
     },
     {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
+      "name": "Discord",
+      "icon": "discord",
+      "url": "https://discord.gg/fuGSrbb3wP"
     },
     {
-      "name": "Blog",
+      "name": "Website",
       "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
+      "url": "https://victorgamestudio.com"
     }
   ],
   "navigation": [
@@ -69,17 +69,16 @@
       ]
     },
     {
-      "group": "API Documentation",
+      "group": "Objects",
       "pages": [
-        "api-reference/introduction"
+        "objects/actor",
+        "objects/roleplay_character"
       ]
     },
     {
-      "group": "Endpoint Examples",
+      "group": "Poly Plaza",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "poly-plaza/introduction"
       ]
     }
   ],

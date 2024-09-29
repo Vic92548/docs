@@ -1,0 +1,303 @@
+---
+title: 'Role Play Character'
+description: 'Interact with player characters using the Role Play Character object in Lua scripting'
+icon: 'user'
+---
+
+# Role Play Character Object
+
+The `RolePlayCharacter` object allows you to interact with player characters in the game world. This guide provides a comprehensive overview of how to use this object in Lua scripting to manage aspects like money, experience points, levels, and inventory.
+
+## Getting Started
+
+To use the `RolePlayCharacter` object, you need to obtain a reference to it. This typically involves game-specific methods such as player initialization or event callbacks that provide access to the character.
+
+**Example:**
+
+```lua
+-- Assume 'RolePlayCharacter' is a valid reference to a player character
+```
+
+Once you have a reference, you can utilize the methods described below to interact with the character.
+
+---
+
+## Methods
+
+### GetMoney()
+
+**Description:**
+
+Retrieves the amount of money the character currently has.
+
+**Syntax:**
+
+```lua
+local money = RolePlayCharacter:GetMoney()
+```
+
+**Returns:**
+
+- `money`: An integer representing the character's current money balance.
+
+**Example:**
+
+```lua
+local money = RolePlayCharacter:GetMoney()
+print("Current Money:", money)
+```
+
+---
+
+### AddMoney(amount)
+
+**Description:**
+
+Adds a specified amount of money to the character's balance.
+
+**Syntax:**
+
+```lua
+local success = RolePlayCharacter:AddMoney(amount)
+```
+
+**Parameters:**
+
+- `amount`: An integer specifying how much money to add.
+
+**Returns:**
+
+- `success`: A boolean value indicating whether the operation was successful.
+
+**Example:**
+
+```lua
+-- Add 500 units of money to the character
+local success = RolePlayCharacter:AddMoney(500)
+if success then
+    print("Money added successfully!")
+else
+    print("Failed to add money.")
+end
+```
+
+---
+
+### RemoveMoney(amount)
+
+**Description:**
+
+Removes a specified amount of money from the character's balance.
+
+**Syntax:**
+
+```lua
+local success = RolePlayCharacter:RemoveMoney(amount)
+```
+
+**Parameters:**
+
+- `amount`: An integer specifying how much money to remove.
+
+**Returns:**
+
+- `success`: A boolean value indicating whether the operation was successful.
+
+**Example:**
+
+```lua
+-- Remove 200 units of money from the character
+local success = RolePlayCharacter:RemoveMoney(200)
+if success then
+    print("Money removed successfully!")
+else
+    print("Failed to remove money.")
+end
+```
+
+---
+
+### GetExp()
+
+**Description:**
+
+Retrieves the character's current experience points (XP).
+
+**Syntax:**
+
+```lua
+local experience = RolePlayCharacter:GetExp()
+```
+
+**Returns:**
+
+- `experience`: An integer representing the character's current XP.
+
+**Example:**
+
+```lua
+local experience = RolePlayCharacter:GetExp()
+print("Current Experience Points:", experience)
+```
+
+---
+
+### AddExp(amount)
+
+**Description:**
+
+Adds a specified amount of experience points to the character.
+
+**Syntax:**
+
+```lua
+local success = RolePlayCharacter:AddExp(amount)
+```
+
+**Parameters:**
+
+- `amount`: An integer specifying how much XP to add.
+
+**Returns:**
+
+- `success`: A boolean value indicating whether the operation was successful.
+
+**Example:**
+
+```lua
+-- Add 1000 experience points to the character
+local success = RolePlayCharacter:AddExp(1000)
+if success then
+    print("Experience added successfully!")
+else
+    print("Failed to add experience.")
+end
+```
+
+---
+
+### GetLevel()
+
+**Description:**
+
+Retrieves the character's current level.
+
+**Syntax:**
+
+```lua
+local level = RolePlayCharacter:GetLevel()
+```
+
+**Returns:**
+
+- `level`: An integer representing the character's level.
+
+**Example:**
+
+```lua
+local level = RolePlayCharacter:GetLevel()
+print("Current Level:", level)
+```
+
+---
+
+### GetInventory()
+
+**Description:**
+
+Accesses the character's inventory.
+
+**Syntax:**
+
+```lua
+local inventory = RolePlayCharacter:GetInventory()
+```
+
+**Returns:**
+
+- `inventory`: An `Inventory` object representing the character's inventory.
+
+**Example:**
+
+```lua
+local inventory = RolePlayCharacter:GetInventory()
+-- Use inventory methods to interact with the inventory
+```
+
+---
+
+## Inventory Object Methods
+
+Since `GetInventory()` returns an `Inventory` object, you can use its methods to manage the character's inventory. (Assuming the `Inventory` object provides methods like `AddItem`, `RemoveItem`, `GetItems`, etc.)
+
+**Example:**
+
+```lua
+local inventory = RolePlayCharacter:GetInventory()
+
+-- Add an item to the inventory
+inventory:AddItem("HealthPotion", 3)
+
+-- Remove an item from the inventory
+inventory:RemoveItem("HealthPotion", 1)
+
+-- Get the list of items
+local items = inventory:GetItems()
+for itemName, quantity in pairs(items) do
+    print(itemName, quantity)
+end
+```
+
+---
+
+## Example Usage
+
+Here's an example that utilizes several of the methods:
+
+```lua
+-- Check the character's current money and experience
+local money = RolePlayCharacter:GetMoney()
+local experience = RolePlayCharacter:GetExp()
+local level = RolePlayCharacter:GetLevel()
+
+print("Money:", money)
+print("Experience:", experience)
+print("Level:", level)
+
+-- Add money and experience to the character
+RolePlayCharacter:AddMoney(1000)
+RolePlayCharacter:AddExp(500)
+
+-- Remove some money
+RolePlayCharacter:RemoveMoney(200)
+
+-- Access and interact with the inventory
+local inventory = RolePlayCharacter:GetInventory()
+inventory:AddItem("Sword", 1)
+inventory:AddItem("Shield", 1)
+
+-- Display updated stats
+money = RolePlayCharacter:GetMoney()
+experience = RolePlayCharacter:GetExp()
+print("Updated Money:", money)
+print("Updated Experience:", experience)
+```
+
+---
+
+## Notes
+
+- Ensure that you have a valid `RolePlayCharacter` reference to avoid runtime errors.
+- When adding or removing money and experience, consider implementing checks to prevent negative balances or exceeding maximum limits.
+- The `Inventory` object methods depend on how the inventory system is implemented in your game.
+
+## Troubleshooting
+
+- **Operation Failed**: If `AddMoney`, `RemoveMoney`, or `AddExp` return `false`, ensure that the character's wallet or leveling components are properly initialized.
+- **Invalid Inventory**: If `GetInventory()` returns `nil`, check that the character's inventory component is correctly set up.
+
+## Conclusion
+
+The `RolePlayCharacter` object provides essential methods for managing player characters in your game. By leveraging these methods in Lua scripting, you can create rich gameplay experiences involving character progression, currency systems, and inventory management.
+
+Experiment with these methods to enhance your game's interactivity and depth.

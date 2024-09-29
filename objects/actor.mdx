@@ -1,0 +1,517 @@
+---
+title: 'Actors'
+description: 'Interact with game entities using the Actors in Lua scripting'
+icon: 'box'
+---
+
+# Actor Object
+
+The `Actor` object represents any entity in the game world that has a physical presence, such as characters, items, or environmental elements. This guide provides a detailed explanation of how to interact with `Actor` objects using Lua scripting in your game.
+
+## Getting Started
+
+To interact with an `Actor` in Lua, you first need to obtain a reference to it. This can be done through various game-specific mechanisms, such as collision events, overlap events, or by querying the game world.
+
+**Example:**
+
+```lua
+-- Assume 'Actor' is a valid Actor object obtained from the game
+```
+
+Once you have an `Actor` reference, you can use the methods described below to manipulate or retrieve information about it.
+
+---
+
+## Methods
+
+### GetLocation()
+
+**Description:**
+
+Returns the current location of the `Actor` in the game world.
+
+**Syntax:**
+
+```lua
+local position = Actor:GetLocation()
+```
+
+**Returns:**
+
+- `position`: A table containing the fields `x`, `y`, and `z`, representing the `Actor`'s position in world coordinates.
+
+**Example:**
+
+```lua
+local position = Actor:GetLocation()
+print("Actor Position:", position.x, position.y, position.z)
+```
+
+---
+
+### SetLocation(position)
+
+**Description:**
+
+Sets the `Actor`'s location in the game world.
+
+**Syntax:**
+
+```lua
+Actor:SetLocation(position)
+```
+
+**Parameters:**
+
+- `position`: A table containing the fields `x`, `y`, and `z`, specifying the new position for the `Actor`.
+
+**Example:**
+
+```lua
+local newPosition = { x = 100, y = 200, z = 300 }
+Actor:SetLocation(newPosition)
+```
+
+---
+
+### GetRotation()
+
+**Description:**
+
+Retrieves the `Actor`'s rotation.
+
+**Syntax:**
+
+```lua
+local rotation = Actor:GetRotation()
+```
+
+**Returns:**
+
+- `rotation`: A table containing the fields `pitch`, `yaw`, and `roll`, representing the `Actor`'s rotation in degrees.
+
+**Example:**
+
+```lua
+local rotation = Actor:GetRotation()
+print("Actor Rotation:", rotation.pitch, rotation.yaw, rotation.roll)
+```
+
+---
+
+### SetRotation(rotation)
+
+**Description:**
+
+Sets the `Actor`'s rotation.
+
+**Syntax:**
+
+```lua
+Actor:SetRotation(rotation)
+```
+
+**Parameters:**
+
+- `rotation`: A table containing the fields `pitch`, `yaw`, and `roll`, specifying the new rotation for the `Actor` in degrees.
+
+**Example:**
+
+```lua
+local newRotation = { pitch = 0, yaw = 90, roll = 0 }
+Actor:SetRotation(newRotation)
+```
+
+---
+
+### GetScale()
+
+**Description:**
+
+Retrieves the `Actor`'s scale.
+
+**Syntax:**
+
+```lua
+local scale = Actor:GetScale()
+```
+
+**Returns:**
+
+- `scale`: A table containing the fields `x`, `y`, and `z`, representing the `Actor`'s scale along each axis.
+
+**Example:**
+
+```lua
+local scale = Actor:GetScale()
+print("Actor Scale:", scale.x, scale.y, scale.z)
+```
+
+---
+
+### Destroy()
+
+**Description:**
+
+Destroys the `Actor`, removing it from the game world.
+
+**Syntax:**
+
+```lua
+Actor:Destroy()
+```
+
+**Example:**
+
+```lua
+-- Remove the Actor from the game world
+Actor:Destroy()
+```
+
+---
+
+### GetName()
+
+**Description:**
+
+Retrieves the name of the `Actor`.
+
+**Syntax:**
+
+```lua
+local name = Actor:GetName()
+```
+
+**Returns:**
+
+- `name`: A string containing the `Actor`'s name.
+
+**Example:**
+
+```lua
+local name = Actor:GetName()
+print("Actor Name:", name)
+```
+
+---
+
+### GetClassName()
+
+**Description:**
+
+Retrieves the class name of the `Actor`.
+
+**Syntax:**
+
+```lua
+local className = Actor:GetClassName()
+```
+
+**Returns:**
+
+- `className`: A string containing the name of the `Actor`'s class.
+
+**Example:**
+
+```lua
+local className = Actor:GetClassName()
+print("Actor Class:", className)
+```
+
+---
+
+### SetPhysicsEnabled(enable)
+
+**Description:**
+
+Enables or disables physics simulation for the `Actor`.
+
+**Syntax:**
+
+```lua
+Actor:SetPhysicsEnabled(enable)
+```
+
+**Parameters:**
+
+- `enable`: A boolean value (`true` or `false`) indicating whether to enable physics simulation.
+
+**Example:**
+
+```lua
+-- Enable physics simulation
+Actor:SetPhysicsEnabled(true)
+```
+
+---
+
+### GetPhysicsEnabled()
+
+**Description:**
+
+Checks if physics simulation is enabled for the `Actor`.
+
+**Syntax:**
+
+```lua
+local isEnabled = Actor:GetPhysicsEnabled()
+```
+
+**Returns:**
+
+- `isEnabled`: A boolean value indicating whether physics simulation is enabled.
+
+**Example:**
+
+```lua
+local physicsEnabled = Actor:GetPhysicsEnabled()
+print("Physics Enabled:", physicsEnabled)
+```
+
+---
+
+### SetCollisionEnabled(enable)
+
+**Description:**
+
+Enables or disables collision for the `Actor`.
+
+**Syntax:**
+
+```lua
+Actor:SetCollisionEnabled(enable)
+```
+
+**Parameters:**
+
+- `enable`: A boolean value (`true` or `false`) indicating whether to enable collision.
+
+**Example:**
+
+```lua
+-- Disable collision
+Actor:SetCollisionEnabled(false)
+```
+
+---
+
+### GetCollisionEnabled()
+
+**Description:**
+
+Checks if collision is enabled for the `Actor`.
+
+**Syntax:**
+
+```lua
+local isEnabled = Actor:GetCollisionEnabled()
+```
+
+**Returns:**
+
+- `isEnabled`: A boolean value indicating whether collision is enabled.
+
+**Example:**
+
+```lua
+local collisionEnabled = Actor:GetCollisionEnabled()
+print("Collision Enabled:", collisionEnabled)
+```
+
+---
+
+### GetMass()
+
+**Description:**
+
+Retrieves the mass of the `Actor` in kilograms.
+
+**Syntax:**
+
+```lua
+local mass = Actor:GetMass()
+```
+
+**Returns:**
+
+- `mass`: A number representing the `Actor`'s mass in kilograms.
+
+**Example:**
+
+```lua
+local mass = Actor:GetMass()
+print("Actor Mass:", mass, "kg")
+```
+
+---
+
+### SetMass(mass)
+
+**Description:**
+
+Sets the mass of the `Actor`.
+
+**Syntax:**
+
+```lua
+Actor:SetMass(mass)
+```
+
+**Parameters:**
+
+- `mass`: A number specifying the new mass for the `Actor` in kilograms.
+
+**Example:**
+
+```lua
+-- Set the Actor's mass to 50 kg
+Actor:SetMass(50)
+```
+
+---
+
+### GetGravity()
+
+**Description:**
+
+Checks if gravity is enabled for the `Actor`.
+
+**Syntax:**
+
+```lua
+local gravityEnabled = Actor:GetGravity()
+```
+
+**Returns:**
+
+- `gravityEnabled`: A boolean value indicating whether gravity is enabled.
+
+**Example:**
+
+```lua
+local gravityEnabled = Actor:GetGravity()
+print("Gravity Enabled:", gravityEnabled)
+```
+
+---
+
+### SetGravity(enable)
+
+**Description:**
+
+Enables or disables gravity for the `Actor`.
+
+**Syntax:**
+
+```lua
+Actor:SetGravity(enable)
+```
+
+**Parameters:**
+
+- `enable`: A boolean value (`true` or `false`) indicating whether to enable gravity.
+
+**Example:**
+
+```lua
+-- Disable gravity
+Actor:SetGravity(false)
+```
+
+---
+
+### AddImpulse(impulse)
+
+**Description:**
+
+Applies an impulse to the `Actor`, affecting its velocity immediately.
+
+**Syntax:**
+
+```lua
+Actor:AddImpulse(impulse)
+```
+
+**Parameters:**
+
+- `impulse`: A table containing `x`, `y`, and `z` fields representing the impulse vector.
+
+**Example:**
+
+```lua
+local impulse = { x = 0, y = 0, z = 1000 }
+Actor:AddImpulse(impulse)
+```
+
+---
+
+### GetVelocity()
+
+**Description:**
+
+Retrieves the `Actor`'s current velocity.
+
+**Syntax:**
+
+```lua
+local velocity = Actor:GetVelocity()
+```
+
+**Returns:**
+
+- `velocity`: A table containing `x`, `y`, and `z` fields representing the `Actor`'s velocity.
+
+**Example:**
+
+```lua
+local velocity = Actor:GetVelocity()
+print("Actor Velocity:", velocity.x, velocity.y, velocity.z)
+```
+
+---
+
+## Example Usage
+
+Here's an example that combines several of the above methods:
+
+```lua
+-- Obtain the Actor's current position
+local position = Actor:GetLocation()
+
+-- Move the Actor upward by 100 units
+position.z = position.z + 100
+Actor:SetLocation(position)
+
+-- Apply an upward impulse to the Actor
+local impulse = { x = 0, y = 0, z = 500 }
+Actor:AddImpulse(impulse)
+
+-- Check if physics is enabled
+if not Actor:GetPhysicsEnabled() then
+    -- Enable physics
+    Actor:SetPhysicsEnabled(true)
+end
+
+-- Disable gravity
+Actor:SetGravity(false)
+
+-- Print the Actor's name and class
+local name = Actor:GetName()
+local className = Actor:GetClassName()
+print("Actor:", name, "Class:", className)
+```
+
+## Notes
+
+- The `Actor` object represents a single instance of an actor in the game world.
+- Ensure that you have a valid `Actor` reference before calling these methods to avoid runtime errors.
+- Changes to the `Actor`'s properties may have immediate effects on the game world and physics simulation.
+
+## Troubleshooting
+
+- **Method Not Found Error**: Ensure that you are calling methods on a valid `Actor` object.
+- **Unexpected Behavior**: Verify that the parameters you pass to methods are in the correct format and contain all required fields.
+
+## Conclusion
+
+By using the methods provided by the `Actor` object, you can control and interact with game entities dynamically through Lua scripting. Experiment with these methods to create engaging and interactive gameplay mechanics.
