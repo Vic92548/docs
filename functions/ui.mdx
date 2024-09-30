@@ -1,0 +1,126 @@
+---
+title: 'User Interface'
+description: 'Interact with the game UI using Lua scripting'
+icon: 'display'
+---
+
+# Introduction
+
+This guide covers the UI-related functions available for Lua scripting in VGS games. These functions allow you to create custom UI elements and control the game's flow by quitting or resuming the game.
+
+---
+
+## Functions
+
+### CreateUI()
+
+**Description:**
+
+Creates a new UI object that you can use to build and manage custom user interfaces within the game.
+
+**Syntax:**
+
+```lua
+local ui = CreateUI()
+```
+
+**Returns:**
+
+- `ui`: A `UI` object that provides methods to create UI elements like buttons, text fields, images, etc.
+
+**Example:**
+
+```lua
+local ui = CreateUI()
+
+-- Add a button to the UI
+ui:AddButton("Click Me", function()
+    print("Button was clicked!")
+end)
+```
+
+---
+
+### SendNotification(message)
+
+**Description:**
+
+Displays a notification message to the player.
+
+**Syntax:**
+
+```lua
+SendNotification(message)
+```
+
+**Parameters:**
+
+- `message`: A string containing the notification text to display.
+
+**Example:**
+
+```lua
+SendNotification("Welcome to the game!")
+```
+
+---
+
+### Quit()
+
+**Description:**
+
+Exits the game application. This function is useful for creating exit buttons or handling game over scenarios.
+
+**Syntax:**
+
+```lua
+local success = Quit()
+```
+
+**Returns:**
+
+- `success`: A boolean value (`true` or `false`) indicating whether the quit operation was successfully initiated.
+
+**Example:**
+
+```lua
+-- Quit the game when the player loses all lives
+if playerLives <= 0 then
+    local success = Quit()
+    if success then
+        print("Game is quitting...")
+    else
+        print("Failed to quit the game.")
+    end
+end
+```
+
+---
+
+### Resume()
+
+**Description:**
+
+Resumes the game if it is paused. This function can be used to close pause menus or resume gameplay after a modal UI is dismissed.
+
+**Syntax:**
+
+```lua
+local success = Resume()
+```
+
+**Returns:**
+
+- `success`: A boolean value indicating whether the resume operation was successfully triggered.
+
+**Example:**
+
+```lua
+-- Resume the game after closing a pause menu
+local success = Resume()
+if success then
+    print("Game has been resumed.")
+else
+    print("Failed to resume the game.")
+end
+```
