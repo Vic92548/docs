@@ -1,126 +1,355 @@
 ---
 title: 'User Interface'
-description: 'Interact with the game UI using Lua scripting'
-icon: 'display'
+description: 'Create and manage custom user interfaces using the Poly Plaza UI Framework'
+icon: 'window'
 ---
 
-# Introduction
+<Info>
+  Poly Plaza's UI framework combines the power of Unreal Engine's widget system with Lua scripting, allowing you to create dynamic interfaces that seamlessly integrate with the game's visual style.
+</Info>
 
-This guide covers the UI-related functions available for Lua scripting in VGS games. These functions allow you to create custom UI elements and control the game's flow by quitting or resuming the game.
+## Understanding the UI System
 
----
+The UI system in Poly Plaza works by creating a bridge between Lua scripts and Unreal Engine's widget system. When you create a UI through Lua, you're actually:
 
-## Functions
+1. Creating a UI instance that can be shown/hidden
+2. Defining a data structure that describes your UI
+3. Letting the game engine convert that data into actual widgets
 
-### CreateUI()
+<Note>
+  All UIs in Poly Plaza are created using the `CreateUI()` function and require a `ui` table that defines their structure.
+</Note>
 
-**Description:**
+## Creating Your First UI
 
-Creates a new UI object that you can use to build and manage custom user interfaces within the game.
-
-**Syntax:**
-
-```lua
-local ui = CreateUI()
-```
-
-**Returns:**
-
-- `ui`: A `UI` object that provides methods to create UI elements like buttons, text fields, images, etc.
-
-**Example:**
+Here's how to create a basic UI:
 
 ```lua
+-- Create a new UI instance
 local ui = CreateUI()
 
--- Add a button to the UI
-ui:AddButton("Click Me", function()
-    print("Button was clicked!")
-end)
+-- Define the UI structure
+ui.ui = {
+    title = "Welcome",
+    elements = {
+        {
+            type = "text",
+            content = "Welcome to Poly Plaza!"
+        },
+        {
+            type = "button",
+            text = "Close",
+            onClick = function()
+                ui:Hide()
+            end
+        }
+    }
+}
+
+-- Display the UI
+ui:Show()
 ```
 
----
+### Understanding the UI Structure
 
-### SendNotification(message)
-
-**Description:**
-
-Displays a notification message to the player.
-
-**Syntax:**
+Every UI in Poly Plaza requires a specific structure:
 
 ```lua
-SendNotification(message)
+ui.ui = {
+    title = string,      -- Window title (optional)
+    elements = array     -- Array of UI elements
+}
 ```
 
-**Parameters:**
+Each element in the `elements` array must have at least:
+- A `type` field specifying what kind of element it is
+- Additional fields depending on the element type
 
-- `message`: A string containing the notification text to display.
+## UI Element Types
 
-**Example:**
+### Text Elements
+
+Text elements display static or dynamic text:
 
 ```lua
-SendNotification("Welcome to the game!")
+{
+    type = "text",
+    content = "Hello World",     -- The text to display
+    color = "white",            -- Text color (optional)
+    size = "normal",           -- Text size: small, normal, large (optional)
+    align = "left"            -- Text alignment: left, center, right (optional)
+}
 ```
 
----
+### Buttons
 
-### Quit()
-
-**Description:**
-
-Exits the game application. This function is useful for creating exit buttons or handling game over scenarios.
-
-**Syntax:**
+Buttons allow user interaction:
 
 ```lua
-local success = Quit()
+{
+    type = "button",
+    text = "Click Me",           -- Button label
+    onClick = function()         -- Click handler
+        SendNotification("Clicked!")
+    end,
+    style = "primary",          -- Button style (optional)
+    enabled = true             -- Enable/disable button (optional)
+}
 ```
 
-**Returns:**
+### Input Fields
 
-- `success`: A boolean value (`true` or `false`) indicating whether the quit operation was successfully initiated.
-
-**Example:**
+Input fields allow text input from users:
 
 ```lua
--- Quit the game when the player loses all lives
-if playerLives <= 0 then
-    local success = Quit()
-    if success then
-        print("Game is quitting...")
-    else
-        print("Failed to quit the game.")
+{
+    type = "input",
+    placeholder = "Type here...",  -- Placeholder text
+    defaultValue = "",            -- Initial value (optional)
+    onSubmit = function(text)     -- Called when input is submitted
+        print("User entered: " .. text)
+    end,
+    onChange = function(text)     -- Called when input changes (optional)
+        print("Current text: " .. text)
     end
+}
+```
+
+### Images
+
+Display images in your UI:
+
+```lua
+{
+    type = "image",
+    source = "/api/placeholder/400/300",  -- Image source
+    alt = "Description",                  -- Alt text
+    width = 400,                         -- Width (optional)
+    height = 300                         -- Height (optional)
+}
+```
+
+## Layout Containers
+
+### Basic Container
+
+Group elements together:
+
+```lua
+{
+    type = "container",
+    style = "panel",            -- Container style (optional)
+    padding = 10,              -- Padding around content (optional)
+    elements = {               -- Child elements
+        { type = "text", content = "Item 1" },
+        { type = "text", content = "Item 2" }
+    }
+}
+```
+
+### Grid Container
+
+Organize elements in a grid layout:
+
+```lua
+{
+    type = "grid",
+    columns = 2,               -- Number of columns
+    spacing = 5,              -- Space between items (optional)
+    elements = {              -- Child elements
+        { type = "button", text = "1" },
+        { type = "button", text = "2" },
+        { type = "button", text = "3" },
+        { type = "button", text = "4" }
+    }
+}
+```
+
+## Dynamic UIs
+
+You can update UI content at any time by modifying the `ui` table:
+
+```lua
+local ui = CreateUI()
+
+-- Initial setup
+ui.ui = {
+    title = "Counter",
+    elements = {
+        { type = "text", content = "Count: 0" }
+    }
+}
+
+local count = 0
+
+-- Function to update the UI
+local function updateCounter()
+    count = count + 1
+    ui.ui = {
+        title = "Counter",
+        elements = {
+            { type = "text", content = "Count: " .. count }
+        }
+    }
+end
+
+-- Add update button
+table.insert(ui.ui.elements, {
+    type = "button",
+    text = "Increment",
+    onClick = updateCounter
+})
+
+ui:Show()
+```
+
+## Managing UI State
+
+Best practices for managing UI state:
+
+### 1. Single UI Instance
+
+Keep a reference to your UI instance if you plan to reuse it:
+
+```lua
+local shopUI = CreateUI() -- Store reference
+
+local function openShop()
+    shopUI:Show()
+end
+
+local function closeShop()
+    shopUI:Hide()
 end
 ```
 
----
+### 2. Updating Content
 
-### Resume()
-
-**Description:**
-
-Resumes the game if it is paused. This function can be used to close pause menus or resume gameplay after a modal UI is dismissed.
-
-**Syntax:**
+Update specific parts of your UI when needed:
 
 ```lua
-local success = Resume()
-```
-
-**Returns:**
-
-- `success`: A boolean value indicating whether the resume operation was successfully triggered.
-
-**Example:**
-
-```lua
--- Resume the game after closing a pause menu
-local success = Resume()
-if success then
-    print("Game has been resumed.")
-else
-    print("Failed to resume the game.")
+local function updateMoney(amount)
+    ui.ui.elements[1] = {
+        type = "text",
+        content = "Money: $" .. amount
+    }
 end
 ```
+
+### 3. Cleanup
+
+Hide UIs when they're no longer needed:
+
+```lua
+local function onGameEnd()
+    ui:Hide()
+end
+```
+
+## Complete Example: Shop System
+
+Here's a complete example of a shop system with dynamic content:
+
+```lua
+local shop = CreateUI()
+
+-- Setup inventory data
+local items = {
+    { name = "Health Potion", price = 100 },
+    { name = "Mana Potion", price = 150 },
+    { name = "Sword", price = 500 }
+}
+
+-- Create shop interface
+local function refreshShop()
+    local player = GetLocalPlayer()
+    local playerMoney = player:GetMoney()
+
+    local elements = {
+        {
+            type = "text",
+            content = "Your Money: $" .. playerMoney,
+            size = "large"
+        }
+    }
+
+    -- Add shop items
+    for _, item in ipairs(items) do
+        table.insert(elements, {
+            type = "container",
+            style = "panel",
+            elements = {
+                {
+                    type = "text",
+                    content = item.name .. " - $" .. item.price
+                },
+                {
+                    type = "button",
+                    text = "Buy",
+                    enabled = playerMoney >= item.price,
+                    onClick = function()
+                        if player:RemoveMoney(item.price) then
+                            SendNotification("Purchased " .. item.name)
+                            refreshShop()
+                        end
+                    end
+                }
+            }
+        })
+    end
+
+    shop.ui = {
+        title = "Town Shop",
+        elements = elements
+    }
+end
+
+-- Initialize and show shop
+refreshShop()
+shop:Show()
+```
+
+## Tips for Complex UIs
+
+<AccordionGroup>
+  <Accordion title="Performance">
+    - Create UIs once and reuse them
+    - Only update parts of the UI that changed
+    - Hide UIs instead of destroying them
+    - Be mindful of the number of elements
+  </Accordion>
+
+  <Accordion title="User Experience">
+    - Provide feedback for all user actions
+    - Keep interfaces consistent
+    - Make sure text is readable
+    - Add appropriate spacing between elements
+    - Use clear and concise labels
+  </Accordion>
+
+  <Accordion title="Code Organization">
+    - Split complex UIs into functions
+    - Keep UI logic separate from game logic
+    - Comment your code
+    - Use meaningful variable names
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Join Discord"
+    icon="discord"
+    href="https://discord.com/invite/pAnfNNqg4c"
+  >
+    Get help from the modding community
+  </Card>
+  <Card
+    title="Youtube tutorials"
+    icon="youtube"
+    href="https://www.youtube.com/@VictorsAdventure"
+  >
+    Check out more examples with my video tutorials
+  </Card>
+</CardGroup>

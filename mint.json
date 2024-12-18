@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "VGS Toolkit",
+  "name": "Poly Plaza Toolkit",
   "logo": {
     "dark": "/logo/vgv_toolkit_logo_dark.svg",
     "light": "/logo/vgv_toolkit_logo_light.svg"
@@ -18,34 +18,38 @@
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:hi@mintlify.com"
+      "url": "help@victorgamestudio.com"
     }
   ],
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "name": "Get Poly Plaza",
+    "url": "https://store.steampowered.com/app/2716030/Poly_Plaza/"
   },
-  "tabs": [
-    {
-      "name": "Poly Plaza",
-      "url": "poly-plaza"
-    }
-  ],
   "anchors": [
     {
       "name": "Steam",
       "icon": "steam",
-      "url": "https://store.steampowered.com/developer/VictorGameStudio"
+      "url": "https://store.steampowered.com/app/2716030/Poly_Plaza/"
     },
     {
       "name": "Discord",
       "icon": "discord",
-      "url": "https://discord.gg/fuGSrbb3wP"
+      "url": "https://discord.com/invite/pAnfNNqg4c"
     },
     {
-      "name": "Website",
-      "icon": "newspaper",
-      "url": "https://victorgamestudio.com"
+      "name": "Youtube",
+      "icon": "youtube",
+      "url": "https://www.youtube.com/@VictorsAdventure"
+    },
+    {
+      "name": "Twitch",
+      "icon": "twitch",
+      "url": "https://www.twitch.tv/victorsgameventure"
+    },
+    {
+      "name": "Reddit",
+      "icon": "reddit",
+      "url": "https://www.reddit.com/r/PolyPlaza/"
     }
   ],
   "navigation": [
@@ -53,30 +57,22 @@
       "group": "Get Started",
       "pages": [
         "introduction",
-        "quickstart"
+        "quickstart",
+        "lua_scripting"
       ]
     },
     {
-      "group": "Functions",
+      "group": "Scripting Reference",
       "pages": [
-        "functions/ui"
-      ]
-    },
-    {
-      "group": "Objects",
-      "pages": [
+        "functions/ui",
         "objects/actor",
-        "objects/roleplay_character"
-      ]
-    },
-    {
-      "group": "Poly Plaza",
-      "pages": [
-        "poly-plaza/introduction"
+        "objects/character"
       ]
     }
   ],
   "footerSocials": {
-    "discord": "https://discord.gg/fuGSrbb3wP"
+    "discord": "https://discord.com/invite/pAnfNNqg4c",
+    "youtube": "https://www.youtube.com/@VictorsAdventure",
+    "website" : "https://www.reddit.com/r/PolyPlaza/"
   }
 }

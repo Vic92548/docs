@@ -1,0 +1,248 @@
+---
+title: 'Lua Scripting'
+description: 'Learn how to create scripts for Poly Plaza using Lua'
+---
+
+<Info>
+  **Prerequisite** Basic understanding of Lua programming language is recommended.
+</Info>
+
+## Getting Started
+
+Poly Plaza includes a robust Lua scripting system that allows you to create mods and extend game functionality. This guide covers the core functions and features available to Lua scripts.
+
+<CardGroup cols={2}>
+  <Card
+    title="Global Functions"
+    icon="code"
+    href="#global-functions"
+  >
+    Learn about the core functions available in all scripts
+  </Card>
+  <Card
+    title="Character System"
+    icon="user"
+    href="#character-system"
+  >
+    Spawn and control characters
+  </Card>
+  <Card
+    title="UI System"
+    icon="window"
+    href="#ui-system"
+  >
+    Create custom user interfaces
+  </Card>
+  <Card
+    title="Steam Integration"
+    icon="steam"
+    href="#steam-integration"
+  >
+    Access Steam features
+  </Card>
+</CardGroup>
+
+## Global Functions
+
+### Core Functions
+
+```lua
+-- Send a notification to the player
+SendNotification("Hello World!")
+
+-- Quit the game
+Quit()
+
+-- Resume from pause
+Resume()
+
+-- Respawn the player
+Respawn()
+
+-- Save the game
+SaveGame()
+
+-- Open settings menu
+OpenSettings()
+```
+
+## Character System
+
+Spawn and control characters in the game world:
+
+<CodeGroup>
+
+```lua Spawning
+-- Spawn a character at coordinates
+local character = SpawnCharacter({
+    x = 100,
+    y = 200,
+    z = 50
+})
+```
+
+```lua Movement
+-- Move character to location
+character:MoveTo({
+    x = 150,
+    y = 250,
+    z = 50
+})
+
+-- Make character look at position
+character:LookAt({
+    x = 200,
+    y = 200,
+    z = 50
+})
+```
+
+```lua Interactions
+-- Add primary interaction (E key by default)
+character:BindPrimaryInteraction(function()
+    print("Primary interaction triggered")
+end)
+
+-- Add secondary interaction (F key by default)
+character:BindSecondaryInteraction(function()
+    print("Secondary interaction triggered")
+end)
+
+-- Remove all interactions
+character:UnbindInteractions()
+```
+
+```lua Equipment
+-- Equip clothing on character
+character:EquipCloth({
+    itemClass = "BP_Shirt_01"
+})
+```
+
+</CodeGroup>
+
+## Player Functions
+
+Access and modify player data:
+
+```lua
+-- Get reference to local player
+local player = GetLocalPlayer()
+
+-- Money management
+local money = player:GetMoney()
+player:AddMoney(100)
+player:RemoveMoney(50)
+
+-- Experience system
+local exp = player:GetExp()
+player:AddExp(100)
+local level = player:GetLevel()
+
+-- Inventory management
+local inventory = player:GetInventory()
+local weight = inventory:GetWeight()
+local maxWeight = inventory:GetMaxWeight()
+```
+
+## UI System
+
+Create and manage custom UI elements:
+
+```lua
+-- Create a new UI instance
+local ui = CreateUI()
+
+-- Configure the UI
+ui.ui = {
+    title = "My Custom Window",
+    elements = {
+        { type = "text", content = "Hello World" }
+    }
+}
+
+-- Show/hide the UI
+ui:Show()
+ui:Hide()
+```
+
+## Steam Integration
+
+Access Steam platform features:
+
+```lua
+-- Get Steam API instance
+local steam = GetSteamAPI()
+
+-- Get user information
+local steamId = steam:GetId()
+local username = steam:GetUsername()
+
+-- Check DLC ownership
+local hasDLC = steam:DoesOwnDLC("dlc_name")
+```
+
+## Best Practices
+
+<Tip>
+  Always check if objects exist before calling their methods to avoid errors.
+</Tip>
+
+```lua
+local character = SpawnCharacter({x = 0, y = 0, z = 0})
+if character then
+    character:MoveTo({x = 100, y = 100, z = 0})
+end
+```
+
+## Example Script
+
+Here's a complete example showing various features:
+
+```lua
+-- Create a character that opens a UI when interacted with
+local npc = SpawnCharacter({
+    x = 100,
+    y = 100,
+    z = 0
+})
+
+-- Create UI
+local ui = CreateUI()
+ui.ui = {
+    title = "NPC Dialog",
+    elements = {
+        { type = "text", content = "Would you like to trade?" }
+    }
+}
+
+-- Add interaction
+npc:BindPrimaryInteraction(function()
+    ui:Show()
+end)
+
+-- Get player reference
+local player = GetLocalPlayer()
+
+-- Send welcome message
+SendNotification("Welcome " .. GetSteamAPI():GetUsername())
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Join Discord"
+    icon="discord"
+    href="https://discord.com/invite/pAnfNNqg4c"
+  >
+    Get help from the modding community
+  </Card>
+  <Card
+    title="Youtube tutorials"
+    icon="youtube"
+    href="https://www.youtube.com/@VictorsAdventure"
+  >
+    Check out more examples with my video tutorials
+  </Card>
+</CardGroup>

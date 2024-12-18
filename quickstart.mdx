@@ -1,20 +1,54 @@
 ---
 title: 'Quickstart'
-description: 'Start creating your own lua scripts for our games in less than 2 minutes!'
+description: 'Start creating your own Poly Plaza mods in less than 2 minutes!'
 ---
 
 ## Setup your coding environment
 
-First of all, you will need a script editor that supports **lua** scripting to be able to edit your scripts, personally I recommend using [sublime text](https://www.sublimetext.com/), but you can also use [visual studio code](https://code.visualstudio.com/) for example.
+To begin creating mods for Poly Plaza, you'll need a script editor that supports Lua. We recommend using [Sublime Text](https://www.sublimetext.com/) or [Visual Studio Code](https://code.visualstudio.com/).
 
-### Locate the **Scripts** folder
+### Locate the Scripts folder
 
-Once your favorite text editor is setup, you'll need to locate the **Scripts** folder. The **Scripts** folder is located inside the PolyPlaza directory, the PolyPlaza directory is located inside of the same folder as your PolyPlaza.exe file. You can use the steam feature "open local files" to locate it easily. Once you located the scripts folder, open it with your code editor.
+The Scripts folder is located in your Poly Plaza installation directory:
+
+1. Open Steam
+2. Right-click on Poly Plaza
+3. Select "Properties"
+4. Go to "Local Files"
+5. Click "Browse Local Files"
+6. Open the "Scripts" folder inside of the PolyPlaza folder
 
 ### Directory structure
 
-Inside of the Scripts folder you'll find a lot of lua files already here, they are used to make the base game work so be careful when you modify those. Also, please keep in mind that the default Scripts folder will **reset** each time you update your games trough steam, so I highly recommend you to keep your code safe in an other folder, like in my documents for example, and copy it inside of Scripts when you want to test.
+The Scripts folder contains several default Lua files that power the base game. Important notes:
+
+- Be careful when modifying default files as they control core game functionality
+- The Scripts folder resets with each game update
+- We recommend keeping your mod files in a separate backup location and copying them to the Scripts folder for testing
 
 ### Create your first mod
 
-To create your first mod, you just need to create a new folder inside of Scripts and the lua files inside will automatically be loaded when you start the game!
+1. Create a new folder inside the Scripts directory
+2. Add your Lua files inside this folder
+3. Your mod will automatically load when you start Poly Plaza
+
+Example mod structure:
+```lua
+PolyPlaza/
+  └──Scripts/
+      └── MyFirstMod/
+          ├── init.lua
+          └── customFeatures.lua
+```
+
+When you launch Poly Plaza, the game will automatically detect and load your mod files.
+
+### Testing your mod
+
+1. Make sure your Lua files are in the Scripts folder
+2. Launch Poly Plaza
+3. The game will load your mod automatically
+
+<Tip>
+  Keep a backup of your mod files outside the Scripts folder to prevent losing your work during game updates.
+</Tip>

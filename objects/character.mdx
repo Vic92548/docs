@@ -1,0 +1,205 @@
+---
+title: Character System
+description: Master the complete character system in Poly Plaza
+icon: user
+---
+
+# Character System
+
+Characters in Poly Plaza are powerful entities that combine core Actor functionality with advanced features like customization, inventory, quests, jobs and more. They serve as the backbone for both players and NPCs.
+
+## Base Features
+
+Since Characters inherit from Actors, they have access to all [Actor features](/objects/actor) including:
+- Location & movement control
+- Rotation & scaling
+- Physics & collision
+- Mass & gravity controls
+
+## Creating Characters
+
+### SpawnCharacter
+Creates a new character at the specified location.
+
+```lua
+-- Create a new character
+local npc = SpawnCharacter({
+    x = -10409,
+    y = -19816,
+    z = 126
+})
+```
+
+## Movement & Vision
+
+### MoveTo
+Makes the character walk to a specific location using pathfinding.
+
+```lua
+npc:MoveTo({
+    x = -10500,
+    y = -19900,
+    z = 126
+})
+```
+
+### LookAt
+Makes the character turn to face a specific point.
+
+```lua
+npc:LookAt({
+    x = -10500,
+    y = -19900,
+    z = 126
+})
+```
+
+## Interaction System
+
+### Setting Up Interactions
+
+Characters have a built-in interaction system with interaction zones:
+
+```lua
+-- Primary interaction (usually E key)
+npc:BindPrimaryInteraction(function()
+    print("Hello!")
+    -- Show dialog, open shop, etc.
+end)
+
+-- Secondary interaction (usually F key)
+npc:BindSecondaryInteraction(function()
+    print("Additional options...")
+    -- Show additional menu, etc.
+end)
+
+-- Remove interactions when needed
+npc:UnbindInteractions()
+```
+
+## Customization
+
+### EquipCloth
+Customize character appearance with different clothing items:
+
+```lua
+npc:EquipCloth({
+    itemClass = "BP_Shirt_01",  -- Reference to the clothing item
+})
+```
+
+## Example: Creating a Shop NPC
+
+Here's a complete example of creating a merchant NPC:
+
+```lua
+-- Create our friendly merchant
+local merchant = SpawnCharacter({
+    x = -10409,
+    y = -19816,
+    z = 126
+})
+
+-- Dress them appropriately
+merchant:EquipCloth({
+    itemClass = "BP_MerchantOutfit_01"
+})
+
+-- Set up their shop interaction
+merchant:BindPrimaryInteraction(function()
+    print("Welcome to my shop!")
+    -- Show shop menu here
+end)
+
+-- Set up info interaction
+merchant:BindSecondaryInteraction(function()
+    print("We've got the best prices in town!")
+end)
+```
+
+## Example: Creating a Wandering NPC
+
+```lua
+local function createWanderer()
+    -- Spawn our wandering NPC
+    local npc = SpawnCharacter({
+        x = -10409,
+        y = -19816,
+        z = 126
+    })
+
+    -- Give them casual clothes
+    npc:EquipCloth({
+        itemClass = "BP_CasualOutfit_01"
+    })
+
+    -- Let them chat with players
+    npc:BindPrimaryInteraction(function()
+        print("Beautiful day for a walk!")
+    end)
+
+    -- Make them wander
+    local function wander()
+        npc:MoveTo({
+            x = -10409 + math.random(-100, 100),
+            y = -19816 + math.random(-100, 100),
+            z = 126
+        })
+    end
+
+    return npc
+end
+```
+
+## Best Practices
+
+<Note>
+When spawning characters, ensure the Z coordinate is slightly above ground level to prevent clipping.
+</Note>
+
+<Warning>
+Keep track of your NPCs - too many characters with active AI and pathfinding can impact performance.
+</Warning>
+
+<Tip>
+Use interaction bindings to create immersive NPCs that respond to player actions in meaningful ways.
+</Tip>
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Character not spawning**
+   - Check if the spawn coordinates are valid
+   - Ensure the location isn't obstructed
+   - Verify the Z height is appropriate
+
+2. **Character not moving**
+   - Verify the destination is reachable
+   - Check if pathfinding is possible to that location
+   - Make sure the character isn't blocked
+
+3. **Interactions not working**
+   - Verify the interaction functions are properly bound
+   - Check if the player is in range
+   - Ensure the interaction zone isn't blocked
+
+### Debug Helper
+
+```lua
+local function debugCharacter(char)
+    if not char then
+        print("Character is nil!")
+        return
+    end
+
+    local pos = char:GetLocation()
+    print("--- Character Debug Info ---")
+    print(string.format("Position: %.2f, %.2f, %.2f",
+        pos.x, pos.y, pos.z))
+    print("Has Primary Interaction:", char._hasPrimaryInteraction)
+    print("Has Secondary Interaction:", char._hasSecondaryInteraction)
+end
+```
+
+Remember, characters are what bring your Poly Plaza world to life! Use them to create vibrant, interactive environments that players will love to explore.
