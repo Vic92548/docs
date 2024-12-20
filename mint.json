@@ -27,19 +27,9 @@
   },
   "anchors": [
     {
-      "name": "Steam",
-      "icon": "steam",
-      "url": "https://store.steampowered.com/app/2716030/Poly_Plaza/"
-    },
-    {
       "name": "Discord",
       "icon": "discord",
       "url": "https://discord.com/invite/pAnfNNqg4c"
-    },
-    {
-      "name": "Youtube",
-      "icon": "youtube",
-      "url": "https://www.youtube.com/@VictorsAdventure"
     },
     {
       "name": "Twitch",
@@ -67,6 +57,12 @@
         "functions/ui",
         "objects/actor",
         "objects/character"
+      ]
+    },
+    {
+      "group": "Game Assets",
+      "pages": [
+        "assets/clothes"
       ]
     }
   ],

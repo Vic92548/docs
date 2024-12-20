@@ -111,131 +111,359 @@ Curious about what changed in a CLI version? [Check out the CLI changelog.](/cha
 ```mdx
 ---
 title: 'User Interface'
-description: 'Interact with the game UI using Lua scripting'
-icon: 'display'
+description: 'Create and manage custom user interfaces using the Poly Plaza UI Framework'
+icon: 'window'
 ---
 
-# Introduction
+<Info>
+  Poly Plaza's UI framework combines the power of Unreal Engine's widget system with Lua scripting, allowing you to create dynamic interfaces that seamlessly integrate with the game's visual style.
+</Info>
 
-This guide covers the UI-related functions available for Lua scripting in VGS games. These functions allow you to create custom UI elements and control the game's flow by quitting or resuming the game.
+## Understanding the UI System
 
----
+The UI system in Poly Plaza works by creating a bridge between Lua scripts and Unreal Engine's widget system. When you create a UI through Lua, you're actually:
 
-## Functions
+1. Creating a UI instance that can be shown/hidden
+2. Defining a data structure that describes your UI
+3. Letting the game engine convert that data into actual widgets
 
-### CreateUI()
+<Note>
+  All UIs in Poly Plaza are created using the `CreateUI()` function and require a `ui` table that defines their structure.
+</Note>
 
-**Description:**
+## Creating Your First UI
 
-Creates a new UI object that you can use to build and manage custom user interfaces within the game.
-
-**Syntax:**
-
-```lua
-local ui = CreateUI()
-```
-
-**Returns:**
-
-- `ui`: A `UI` object that provides methods to create UI elements like buttons, text fields, images, etc.
-
-**Example:**
+Here's how to create a basic UI:
 
 ```lua
+-- Create a new UI instance
 local ui = CreateUI()
 
--- Add a button to the UI
-ui:AddButton("Click Me", function()
-    print("Button was clicked!")
-end)
+-- Define the UI structure
+ui.ui = {
+    title = "Welcome",
+    elements = {
+        {
+            type = "text",
+            content = "Welcome to Poly Plaza!"
+        },
+        {
+            type = "button",
+            text = "Close",
+            onClick = function()
+                ui:Hide()
+            end
+        }
+    }
+}
+
+-- Display the UI
+ui:Show()
 ```
 
----
+### Understanding the UI Structure
 
-### SendNotification(message)
-
-**Description:**
-
-Displays a notification message to the player.
-
-**Syntax:**
+Every UI in Poly Plaza requires a specific structure:
 
 ```lua
-SendNotification(message)
+ui.ui = {
+    title = string,      -- Window title (optional)
+    elements = array     -- Array of UI elements
+}
 ```
 
-**Parameters:**
+Each element in the `elements` array must have at least:
+- A `type` field specifying what kind of element it is
+- Additional fields depending on the element type
 
-- `message`: A string containing the notification text to display.
+## UI Element Types
 
-**Example:**
+### Text Elements
+
+Text elements display static or dynamic text:
 
 ```lua
-SendNotification("Welcome to the game!")
+{
+    type = "text",
+    content = "Hello World",     -- The text to display
+    color = "white",            -- Text color (optional)
+    size = "normal",           -- Text size: small, normal, large (optional)
+    align = "left"            -- Text alignment: left, center, right (optional)
+}
 ```
 
----
+### Buttons
 
-### Quit()
-
-**Description:**
-
-Exits the game application. This function is useful for creating exit buttons or handling game over scenarios.
-
-**Syntax:**
+Buttons allow user interaction:
 
 ```lua
-local success = Quit()
+{
+    type = "button",
+    text = "Click Me",           -- Button label
+    onClick = function()         -- Click handler
+        SendNotification("Clicked!")
+    end,
+    style = "primary",          -- Button style (optional)
+    enabled = true             -- Enable/disable button (optional)
+}
 ```
 
-**Returns:**
+### Input Fields
 
-- `success`: A boolean value (`true` or `false`) indicating whether the quit operation was successfully initiated.
-
-**Example:**
+Input fields allow text input from users:
 
 ```lua
--- Quit the game when the player loses all lives
-if playerLives <= 0 then
-    local success = Quit()
-    if success then
-        print("Game is quitting...")
-    else
-        print("Failed to quit the game.")
+{
+    type = "input",
+    placeholder = "Type here...",  -- Placeholder text
+    defaultValue = "",            -- Initial value (optional)
+    onSubmit = function(text)     -- Called when input is submitted
+        print("User entered: " .. text)
+    end,
+    onChange = function(text)     -- Called when input changes (optional)
+        print("Current text: " .. text)
     end
+}
+```
+
+### Images
+
+Display images in your UI:
+
+```lua
+{
+    type = "image",
+    source = "/api/placeholder/400/300",  -- Image source
+    alt = "Description",                  -- Alt text
+    width = 400,                         -- Width (optional)
+    height = 300                         -- Height (optional)
+}
+```
+
+## Layout Containers
+
+### Basic Container
+
+Group elements together:
+
+```lua
+{
+    type = "container",
+    style = "panel",            -- Container style (optional)
+    padding = 10,              -- Padding around content (optional)
+    elements = {               -- Child elements
+        { type = "text", content = "Item 1" },
+        { type = "text", content = "Item 2" }
+    }
+}
+```
+
+### Grid Container
+
+Organize elements in a grid layout:
+
+```lua
+{
+    type = "grid",
+    columns = 2,               -- Number of columns
+    spacing = 5,              -- Space between items (optional)
+    elements = {              -- Child elements
+        { type = "button", text = "1" },
+        { type = "button", text = "2" },
+        { type = "button", text = "3" },
+        { type = "button", text = "4" }
+    }
+}
+```
+
+## Dynamic UIs
+
+You can update UI content at any time by modifying the `ui` table:
+
+```lua
+local ui = CreateUI()
+
+-- Initial setup
+ui.ui = {
+    title = "Counter",
+    elements = {
+        { type = "text", content = "Count: 0" }
+    }
+}
+
+local count = 0
+
+-- Function to update the UI
+local function updateCounter()
+    count = count + 1
+    ui.ui = {
+        title = "Counter",
+        elements = {
+            { type = "text", content = "Count: " .. count }
+        }
+    }
+end
+
+-- Add update button
+table.insert(ui.ui.elements, {
+    type = "button",
+    text = "Increment",
+    onClick = updateCounter
+})
+
+ui:Show()
+```
+
+## Managing UI State
+
+Best practices for managing UI state:
+
+### 1. Single UI Instance
+
+Keep a reference to your UI instance if you plan to reuse it:
+
+```lua
+local shopUI = CreateUI() -- Store reference
+
+local function openShop()
+    shopUI:Show()
+end
+
+local function closeShop()
+    shopUI:Hide()
 end
 ```
 
----
+### 2. Updating Content
 
-### Resume()
-
-**Description:**
-
-Resumes the game if it is paused. This function can be used to close pause menus or resume gameplay after a modal UI is dismissed.
-
-**Syntax:**
+Update specific parts of your UI when needed:
 
 ```lua
-local success = Resume()
-```
-
-**Returns:**
-
-- `success`: A boolean value indicating whether the resume operation was successfully triggered.
-
-**Example:**
-
-```lua
--- Resume the game after closing a pause menu
-local success = Resume()
-if success then
-    print("Game has been resumed.")
-else
-    print("Failed to resume the game.")
+local function updateMoney(amount)
+    ui.ui.elements[1] = {
+        type = "text",
+        content = "Money: $" .. amount
+    }
 end
 ```
 
+### 3. Cleanup
+
+Hide UIs when they're no longer needed:
+
+```lua
+local function onGameEnd()
+    ui:Hide()
+end
+```
+
+## Complete Example: Shop System
+
+Here's a complete example of a shop system with dynamic content:
+
+```lua
+local shop = CreateUI()
+
+-- Setup inventory data
+local items = {
+    { name = "Health Potion", price = 100 },
+    { name = "Mana Potion", price = 150 },
+    { name = "Sword", price = 500 }
+}
+
+-- Create shop interface
+local function refreshShop()
+    local player = GetLocalPlayer()
+    local playerMoney = player:GetMoney()
+
+    local elements = {
+        {
+            type = "text",
+            content = "Your Money: $" .. playerMoney,
+            size = "large"
+        }
+    }
+
+    -- Add shop items
+    for _, item in ipairs(items) do
+        table.insert(elements, {
+            type = "container",
+            style = "panel",
+            elements = {
+                {
+                    type = "text",
+                    content = item.name .. " - $" .. item.price
+                },
+                {
+                    type = "button",
+                    text = "Buy",
+                    enabled = playerMoney >= item.price,
+                    onClick = function()
+                        if player:RemoveMoney(item.price) then
+                            SendNotification("Purchased " .. item.name)
+                            refreshShop()
+                        end
+                    end
+                }
+            }
+        })
+    end
+
+    shop.ui = {
+        title = "Town Shop",
+        elements = elements
+    }
+end
+
+-- Initialize and show shop
+refreshShop()
+shop:Show()
+```
+
+## Tips for Complex UIs
+
+<AccordionGroup>
+  <Accordion title="Performance">
+    - Create UIs once and reuse them
+    - Only update parts of the UI that changed
+    - Hide UIs instead of destroying them
+    - Be mindful of the number of elements
+  </Accordion>
+
+  <Accordion title="User Experience">
+    - Provide feedback for all user actions
+    - Keep interfaces consistent
+    - Make sure text is readable
+    - Add appropriate spacing between elements
+    - Use clear and concise labels
+  </Accordion>
+
+  <Accordion title="Code Organization">
+    - Split complex UIs into functions
+    - Keep UI logic separate from game logic
+    - Comment your code
+    - Use meaningful variable names
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Join Discord"
+    icon="discord"
+    href="https://discord.com/invite/pAnfNNqg4c"
+  >
+    Get help from the modding community
+  </Card>
+  <Card
+    title="Youtube tutorials"
+    icon="youtube"
+    href="https://www.youtube.com/@VictorsAdventure"
+  >
+    Check out more examples with my video tutorials
+  </Card>
+</CardGroup>
 ```
 
 ## File: introduction.mdx
@@ -270,6 +498,259 @@ The Poly Plaza Toolkit is a powerful modding framework that allows you to create
 </CardGroup>
 ```
 
+## File: lua_scripting.mdx
+
+```mdx
+---
+title: 'Lua Scripting'
+description: 'Learn how to create scripts for Poly Plaza using Lua'
+---
+
+<Info>
+  **Prerequisite** Basic understanding of Lua programming language is recommended.
+</Info>
+
+## Getting Started
+
+Poly Plaza includes a robust Lua scripting system that allows you to create mods and extend game functionality. This guide covers the core functions and features available to Lua scripts.
+
+<CardGroup cols={2}>
+  <Card
+    title="Global Functions"
+    icon="code"
+    href="#global-functions"
+  >
+    Learn about the core functions available in all scripts
+  </Card>
+  <Card
+    title="Character System"
+    icon="user"
+    href="#character-system"
+  >
+    Spawn and control characters
+  </Card>
+  <Card
+    title="UI System"
+    icon="window"
+    href="#ui-system"
+  >
+    Create custom user interfaces
+  </Card>
+  <Card
+    title="Steam Integration"
+    icon="steam"
+    href="#steam-integration"
+  >
+    Access Steam features
+  </Card>
+</CardGroup>
+
+## Global Functions
+
+### Core Functions
+
+```lua
+-- Send a notification to the player
+SendNotification("Hello World!")
+
+-- Quit the game
+Quit()
+
+-- Resume from pause
+Resume()
+
+-- Respawn the player
+Respawn()
+
+-- Save the game
+SaveGame()
+
+-- Open settings menu
+OpenSettings()
+```
+
+## Character System
+
+Spawn and control characters in the game world:
+
+<CodeGroup>
+
+```lua Spawning
+-- Spawn a character at coordinates
+local character = SpawnCharacter({
+    x = 100,
+    y = 200,
+    z = 50
+})
+```
+
+```lua Movement
+-- Move character to location
+character:MoveTo({
+    x = 150,
+    y = 250,
+    z = 50
+})
+
+-- Make character look at position
+character:LookAt({
+    x = 200,
+    y = 200,
+    z = 50
+})
+```
+
+```lua Interactions
+-- Add primary interaction (E key by default)
+character:BindPrimaryInteraction(function()
+    print("Primary interaction triggered")
+end)
+
+-- Add secondary interaction (F key by default)
+character:BindSecondaryInteraction(function()
+    print("Secondary interaction triggered")
+end)
+
+-- Remove all interactions
+character:UnbindInteractions()
+```
+
+```lua Equipment
+-- Equip clothing on character
+character:EquipCloth({
+    itemClass = "BP_Shirt_01"
+})
+```
+
+</CodeGroup>
+
+## Player Functions
+
+Access and modify player data:
+
+```lua
+-- Get reference to local player
+local player = GetLocalPlayer()
+
+-- Money management
+local money = player:GetMoney()
+player:AddMoney(100)
+player:RemoveMoney(50)
+
+-- Experience system
+local exp = player:GetExp()
+player:AddExp(100)
+local level = player:GetLevel()
+
+-- Inventory management
+local inventory = player:GetInventory()
+local weight = inventory:GetWeight()
+local maxWeight = inventory:GetMaxWeight()
+```
+
+## UI System
+
+Create and manage custom UI elements:
+
+```lua
+-- Create a new UI instance
+local ui = CreateUI()
+
+-- Configure the UI
+ui.ui = {
+    title = "My Custom Window",
+    elements = {
+        { type = "text", content = "Hello World" }
+    }
+}
+
+-- Show/hide the UI
+ui:Show()
+ui:Hide()
+```
+
+## Steam Integration
+
+Access Steam platform features:
+
+```lua
+-- Get Steam API instance
+local steam = GetSteamAPI()
+
+-- Get user information
+local steamId = steam:GetId()
+local username = steam:GetUsername()
+
+-- Check DLC ownership
+local hasDLC = steam:DoesOwnDLC("dlc_name")
+```
+
+## Best Practices
+
+<Tip>
+  Always check if objects exist before calling their methods to avoid errors.
+</Tip>
+
+```lua
+local character = SpawnCharacter({x = 0, y = 0, z = 0})
+if character then
+    character:MoveTo({x = 100, y = 100, z = 0})
+end
+```
+
+## Example Script
+
+Here's a complete example showing various features:
+
+```lua
+-- Create a character that opens a UI when interacted with
+local npc = SpawnCharacter({
+    x = 100,
+    y = 100,
+    z = 0
+})
+
+-- Create UI
+local ui = CreateUI()
+ui.ui = {
+    title = "NPC Dialog",
+    elements = {
+        { type = "text", content = "Would you like to trade?" }
+    }
+}
+
+-- Add interaction
+npc:BindPrimaryInteraction(function()
+    ui:Show()
+end)
+
+-- Get player reference
+local player = GetLocalPlayer()
+
+-- Send welcome message
+SendNotification("Welcome " .. GetSteamAPI():GetUsername())
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Join Discord"
+    icon="discord"
+    href="https://discord.com/invite/pAnfNNqg4c"
+  >
+    Get help from the modding community
+  </Card>
+  <Card
+    title="Youtube tutorials"
+    icon="youtube"
+    href="https://www.youtube.com/@VictorsAdventure"
+  >
+    Check out more examples with my video tutorials
+  </Card>
+</CardGroup>
+```
+
 ## File: mint.json
 
 ```json
@@ -277,8 +758,8 @@ The Poly Plaza Toolkit is a powerful modding framework that allows you to create
   "$schema": "https://mintlify.com/schema.json",
   "name": "Poly Plaza Toolkit",
   "logo": {
-    "dark": "/logo/poly_plaza_logo_dark.svg",
-    "light": "/logo/poly_plaza_logo_light.svg"
+    "dark": "/logo/vgv_toolkit_logo_dark.svg",
+    "light": "/logo/vgv_toolkit_logo_light.svg"
   },
   "favicon": "/favicon.svg",
   "colors": {
@@ -293,7 +774,7 @@ The Poly Plaza Toolkit is a powerful modding framework that allows you to create
   "topbarLinks": [
     {
       "name": "Support",
-      "url": "mailto:support@polyplaza.com"
+      "url": "help@victorgamestudio.com"
     }
   ],
   "topbarCtaButton": {
@@ -309,7 +790,22 @@ The Poly Plaza Toolkit is a powerful modding framework that allows you to create
     {
       "name": "Discord",
       "icon": "discord",
-      "url": "https://discord.gg/fuGSrbb3wP"
+      "url": "https://discord.com/invite/pAnfNNqg4c"
+    },
+    {
+      "name": "Youtube",
+      "icon": "youtube",
+      "url": "https://www.youtube.com/@VictorsAdventure"
+    },
+    {
+      "name": "Twitch",
+      "icon": "twitch",
+      "url": "https://www.twitch.tv/victorsgameventure"
+    },
+    {
+      "name": "Reddit",
+      "icon": "reddit",
+      "url": "https://www.reddit.com/r/PolyPlaza/"
     }
   ],
   "navigation": [
@@ -317,7 +813,8 @@ The Poly Plaza Toolkit is a powerful modding framework that allows you to create
       "group": "Get Started",
       "pages": [
         "introduction",
-        "quickstart"
+        "quickstart",
+        "lua_scripting"
       ]
     },
     {
@@ -330,8 +827,9 @@ The Poly Plaza Toolkit is a powerful modding framework that allows you to create
     }
   ],
   "footerSocials": {
-    "discord": "https://discord.gg/fuGSrbb3wP",
-    "website": "https://store.steampowered.com/app/2716030/Poly_Plaza/"
+    "discord": "https://discord.com/invite/pAnfNNqg4c",
+    "youtube": "https://www.youtube.com/@VictorsAdventure",
+    "website" : "https://www.reddit.com/r/PolyPlaza/"
   }
 }
 ```
